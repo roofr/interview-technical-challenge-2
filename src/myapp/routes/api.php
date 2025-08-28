@@ -30,7 +30,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 |
 */
 
+// Parking Spot Operations
+Route::post('/parking-spot/{id}/park', [ParkingSpotController::class, 'park'])
+    ->where('id', '[0-9]+')
+    ->name('parking-spot.park');
 
+Route::post('/parking-spot/{id}/unpark', [ParkingSpotController::class, 'unpark'])
+    ->where('id', '[0-9]+')
+    ->name('parking-spot.unpark');
 
 // Parking Lot Information
 Route::get('/parking-lot', [ParkingLotController::class, 'show'])
