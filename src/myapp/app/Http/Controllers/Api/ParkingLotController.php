@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\ParkingLotService;
+use App\Http\Resources\ParkingLotResource;
+use App\Models\ParkingLot;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
@@ -34,11 +36,12 @@ class ParkingLotController extends Controller
                 $id = $parkingLots->first()['id'];
             }
 
-            $status = $this->parkingLotService->getParkingLotStatus($id);
+            // Get the parking lot with relationships
+            $parkingLot = ParkingLot::with(['parkingSpots.currentVehicle'])->findOrFail($id);
 
             return response()->json([
                 'success' => true,
-                'data' => $status
+                'data' => new ParkingLotResource($parkingLot)
             ], 200);
 
         } catch (Exception $e) {
@@ -57,11 +60,13 @@ class ParkingLotController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $parkingLots = $this->parkingLotService->getAllParkingLots();
+            $parkingLots = ParkingLot::where('is_active', true)
+                ->with(['parkingSpots'])
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $parkingLots
+                'data' => ParkingLotResource::collection($parkingLots)
             ], 200);
 
         } catch (Exception $e) {
