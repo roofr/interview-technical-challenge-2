@@ -26,7 +26,7 @@ enum SpotStatus: string
             self::AVAILABLE => 'Available',
             self::OCCUPIED => 'Occupied',
             self::RESERVED => 'Reserved',
-            self::OUT_OF_ORDER => 'Out of Order',
+            self::OUT_OF_ORDER => 'Out of Order', // ok this my be a plus :) :) from here maybe a service order to repair spot or whatever
         };
     }
 

@@ -47,3 +47,10 @@ Route::get('/parking-lot/{id}', [ParkingLotController::class, 'show'])
     ->where('id', '[0-9]+')
     ->name('parking-lot.show-specific');
 
+// Additional helpful endpoints
+Route::get('/parking-lots', [ParkingLotController::class, 'index'])
+    ->name('parking-lots.index');
+
+Route::get('/parking-lot/{id}/capacity', [ParkingLotController::class, 'capacity'])
+    ->where('id', '[0-9]+')
+    ->name('parking-lot.capacity');
