@@ -68,5 +68,10 @@ All endpoints are public. A production system would need auth (API keys or OAuth
 ### No pagination on lot status
 The `GET /api/parking-lot` response embeds all sections and all spots. For large lots this could be a heavy payload. Pagination or a separate `/sections` endpoint would be needed at scale.
 
+### Redis is not used
+
+- **Lot status caching** — `GET /api/parking-lot` runs a JOIN + aggregate query on every request. The result could be cached in Redis and invalidated on every park/unpark, making the read path near-instant.
+- **Distributed locking** — the current concurrency guard relies on PostgreSQL's `lockForUpdate()`, which works well for a single database node. If the app were scaled horizontally, a Redis lock (e.g. via `Cache::lock()`) would be the idiomatic Laravel alternative.
+
 ### Sessions are deleted on unpark
 `ParkingSessionRepository::delete()` hard-deletes the session record. There is no history of past parking events. Soft deletes or an audit log would be needed for reporting.
